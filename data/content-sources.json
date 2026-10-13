@@ -1,0 +1,94 @@
+{
+  "blog": {
+    "source": "Owner-supplied presentation 世界模型的空间一致性.pptx",
+    "article": "/blog/spatial-consistency-world-models/",
+    "figures": [
+      {
+        "asset": "images/blog/spatial-consistency/camera-control.webp",
+        "original_ppt_media": "image10.png",
+        "paper": "https://arxiv.org/abs/2404.02101"
+      },
+      {
+        "asset": "images/blog/spatial-consistency/explicit-cache.webp",
+        "original_ppt_media": "image15.png",
+        "paper": "https://arxiv.org/abs/2503.03751"
+      },
+      {
+        "asset": "images/blog/spatial-consistency/geometry-forcing.webp",
+        "original_ppt_media": "image24.png",
+        "paper": "https://arxiv.org/abs/2507.07982"
+      },
+      {
+        "asset": "images/blog/spatial-consistency/jog3r.webp",
+        "original_ppt_media": "image25.png",
+        "paper": "https://arxiv.org/abs/2501.01409"
+      },
+      {
+        "asset": "images/blog/spatial-consistency/fantasyworld.webp",
+        "original_ppt_media": "image26.png",
+        "paper": "https://arxiv.org/abs/2509.21657"
+      },
+      {
+        "asset": "images/blog/spatial-consistency/irg-block.webp",
+        "original_ppt_media": "image28.png",
+        "paper": "https://arxiv.org/abs/2509.21657"
+      },
+      {
+        "asset": "images/blog/spatial-consistency/vggt-world.webp",
+        "original_ppt_media": "image32.png",
+        "paper": "https://arxiv.org/abs/2603.12655"
+      }
+    ]
+  },
+  "additional_awards": [
+    {
+      "year": 2025,
+      "award": "2025 年全国大学生英语竞赛（NECCS）· C 类三等奖",
+      "source_file": "三等奖.png",
+      "asset": "images/awards/english-2025.webp",
+      "certificate_preview": false
+    },
+    {
+      "year": 2024,
+      "award": "2024 年第七届中国高校智能机器人创意大赛 · 二等奖",
+      "source_file": "主题一无实物田胤辰.jpg",
+      "asset": "images/awards/robot-creative-2024.webp",
+      "certificate_preview": false
+    },
+    {
+      "year": 2024,
+      "award": "2024 年第三届湖北省大学生智能机器人创意竞赛暨第七届中国高校机器人创意大赛湖北区域选拔赛 · 一等奖",
+      "source_file": "21主题一无实物组-田胤辰-省一.jpg",
+      "asset": "images/awards/robot-creative-hubei-2024.webp",
+      "certificate_preview": false
+    },
+    {
+      "year": 2024,
+      "award": "第 17 届全国三维数字化创新设计大赛 · 湖北赛区二等奖",
+      "source_file": "3D大赛省二.png",
+      "asset": "images/awards/3d-design-second-2024.webp",
+      "certificate_preview": true
+    },
+    {
+      "year": 2024,
+      "award": "第 17 届全国三维数字化创新设计大赛 · 湖北赛区三等奖",
+      "source_file": "3D大赛省三.png",
+      "asset": "images/awards/3d-design-third-2024.webp",
+      "certificate_preview": true
+    },
+    {
+      "year": 2023,
+      "award": "湖北省第三届大学生先进成图技术与产品信息建模创新大赛暨第十六届全国大学生先进成图技术与产品信息建模创新大赛预选赛 · 二等奖（机械类）",
+      "source_file": "engineering-drawing-2023.png",
+      "asset": "images/awards/engineering-drawing-2023.webp",
+      "certificate_preview": false
+    }
+  ],
+  "visitor_map": {
+    "provider": "Flag Counter",
+    "statistics_url": "https://info.flagcounter.com/hWmx",
+    "scope": "Homepage visits only",
+    "started": "2026-10-13",
+    "precision": "Approximate IP-based country/region"
+  }
+}

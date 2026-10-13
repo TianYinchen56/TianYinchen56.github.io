@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+
+<!-- Adapted from Jon Barron's academic website. See TEMPLATE_CREDIT.md. -->
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>生成式世界模型中的空间一致性 | 田胤辰</title>
+<meta content="Yinchen Tian" name="author"/>
+<meta content="从相机控制、显式三维缓存到 Geometry Forcing、JOG3R、FantasyWorld 与 VGGT-World，梳理生成式世界模型的几何约束与长程回访问题。" name="description"/>
+<meta content="article" property="og:type"/>
+<meta content="生成式世界模型中的空间一致性 | 田胤辰" property="og:title"/>
+<meta content="从相机控制、显式三维缓存到 Geometry Forcing、JOG3R、FantasyWorld 与 VGGT-World，梳理生成式世界模型的几何约束与长程回访问题。" property="og:description"/>
+<meta content="https://tianyinchen56.github.io/blog/spatial-consistency-world-models/" property="og:url"/>
+<meta content="https://tianyinchen56.github.io/images/blog/spatial-consistency/fantasyworld.webp" property="og:image"/>
+<meta content="#ffffff" name="theme-color"/>
+<link href="https://tianyinchen56.github.io/blog/spatial-consistency-world-models/" rel="canonical"/>
+<link href="/images/favicon.png" rel="icon" type="image/png"/>
+<link href="/stylesheet.css" rel="stylesheet"/>
+<link href="/site.css" rel="stylesheet"/>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "生成式世界模型中的空间一致性", "description": "从相机控制、显式三维缓存到 Geometry Forcing、JOG3R、FantasyWorld 与 VGGT-World，梳理生成式世界模型的几何约束与长程回访问题。", "inLanguage": "zh-Hans", "datePublished": "2026-10-13", "dateModified": "2026-10-13", "author": {"@type": "Person", "name": "Yinchen Tian", "url": "https://tianyinchen56.github.io/"}, "mainEntityOfPage": "https://tianyinchen56.github.io/blog/spatial-consistency-world-models/"}</script></head>
+<body class="page-blog page-post">
+<a class="skip-link" href="#content">Skip to content</a>
+<div class="site-shell">
+<header class="site-header">
+<a class="wordmark" href="/">Yinchen Tian <span lang="zh-Hans">田胤辰</span></a>
+<nav aria-label="Main navigation" class="site-nav"><a href="/">Home</a><a href="/research/">Research</a><a href="/competitions/">Competitions</a><a aria-current="page" href="/blog/">Blog</a></nav>
+</header>
+<main id="content"><article class="blog-article" lang="zh-Hans">
+<header class="post-header">
+<a class="back-link" href="/blog/">返回博客</a>
+<h1>生成式世界模型中的空间一致性</h1>
+<p class="post-subtitle">预测下一帧的背后，是否对应一个稳定的三维世界？</p>
+<p class="meta">田胤辰 · <time datetime="2026-10-13">2026 年 10 月 13 日</time> · 论文阅读笔记</p>
+<p>当镜头离开一张桌子，再从另一个方向转回来，桌子的位置、形状和周围物体的关系是否还保持一致？这是我理解生成式世界模型时最关心的问题：连续生成的画面，能否被解释为同一个世界的不同观测。</p>
+<p>本文由一次同名分享整理，沿着相机控制、显式三维缓存和几何表征学习三条线索展开。文中的 Stage 0、1、2 是梳理方法的阅读框架，几类路线可以并行发展，也可以组合使用。</p>
+</header>
+<nav aria-label="文章目录" class="post-toc">
+<h2>文章目录</h2>
+<ol>
+<li><a href="#consistency">空间一致性究竟约束什么</a></li>
+<li><a href="#camera-control">Stage 0：把相机运动作为生成条件</a></li>
+<li><a href="#explicit-memory">Stage 1：用显式三维缓存约束生成</a></li>
+<li><a href="#geometry-learning">Stage 2：让内部表征学习几何</a></li>
+<li><a href="#geometry-state">VGGT-World：预测几何状态的演化</a></li>
+<li><a href="#revisit">长程回访与尚未解决的问题</a></li>
+<li><a href="#references">参考论文与项目</a></li>
+</ol>
+</nav>
+<section id="consistency">
+<h2>空间一致性究竟约束什么</h2>
+<p>这里先采用一个工作定义：世界模型根据已有观测和控制条件，推演未来的状态或观测。未来可以用像素表示，也可以用潜在特征、深度、点图等表示。这个定义把注意力放在状态如何演化，而不预设模型一定采用哪种架构。</p>
+<p>对视频形式的世界模型，我会区分三类要求。<strong>时间连续性</strong>关注相邻帧是否平滑；<strong>空间一致性</strong>关注不同视角能否对应同一套几何结构；<strong>回访一致性</strong>进一步要求模型在离开一个区域后，仍能在回来时恢复之前的世界。短视频看起来流畅，只能回答其中一部分问题。</p>
+<p>对动态场景，还需要区分相机运动与物体自身运动。相机绕桌子转动时，桌子在图像中的位置会变化，但其三维位置可以保持不变；机器人把杯子拿走时，世界状态本身才发生了变化。生成模型需要同时解释这两种变化。</p>
+</section>
+<section id="camera-control">
+<h2>Stage 0：把相机运动作为生成条件</h2>
+<p>最直接的做法，是在视频扩散模型中加入相机轨迹。生成主干继续处理带噪视频特征，相机编码器把位姿信息变成条件，让输出随平移、旋转等运动发生相应变化。<a href="https://arxiv.org/abs/2404.02101">CameraCtrl</a> 是这条路线的代表。</p>
+<p>相机信息的表示方式很关键。旋转和平移矩阵描述整个相机的姿态，Plücker 射线则为图像中的每个像素提供一条具有几何含义的观测射线。CameraCtrl 用后者建立相机参数与图像特征之间的联系，从而提高视角控制的精度。</p>
+<figure class="post-figure"><a aria-label="查看完整图片：CameraCtrl 中的相机控制生成示例。" class="image-link" href="/images/blog/spatial-consistency/camera-control.webp"><img alt="CameraCtrl 中的相机控制生成示例。" height="483" loading="lazy" src="/images/blog/spatial-consistency/camera-control.webp" width="1121"/></a><figcaption>CameraCtrl 中的相机控制生成示例。 图源：<a href="https://arxiv.org/abs/2404.02101">CameraCtrl</a>，选自分享材料。</figcaption></figure>
+<p>这种方法已经能产生明显的视角变化，但<strong>轨迹可控并不自动保证场景几何稳定</strong>。在训练分布之外的大幅运动、长轨迹或遮挡解除时，模型仍可能重新生成物体的外观与布局。判断模型是否维持了同一个世界，需要检查跨视角对应、遮挡关系和回访结果，不能只看镜头是否按指令移动。</p>
+</section>
+<section id="explicit-memory">
+<h2>Stage 1：用显式三维缓存约束生成</h2>
+<p>如果新视角中的所有内容都由生成网络决定，已经出现过的结构也可能被改写。显式几何路线把可复用的信息存下来：先估计已有帧的深度，把像素反投影到三维，再从目标相机位置渲染出一个参考视图，作为后续生成的条件。</p>
+<p><a href="https://arxiv.org/abs/2503.03751">GEN3C</a> 用种子图像或已生成帧构建三维点云缓存，并用新视角下的缓存渲染引导生成。这样，网络可以利用已知区域的结构，把更多能力用于补全此前不可见的区域及生成后续场景变化。<a href="https://arxiv.org/abs/2503.05638">TrajectoryCrafter</a> 则面向单目视频的相机轨迹重定向，用重建、重投影提供的条件辅助新视角生成。</p>
+<figure class="post-figure figure-compact"><a aria-label="查看完整图片：由图像估计深度并反投影成三维点云，是构建显式几何缓存的基本环节。" class="image-link" href="/images/blog/spatial-consistency/explicit-cache.webp"><img alt="由图像估计深度并反投影成三维点云，是构建显式几何缓存的基本环节。" height="321" loading="lazy" src="/images/blog/spatial-consistency/explicit-cache.webp" width="521"/></a><figcaption>由图像估计深度并反投影成三维点云，是构建显式几何缓存的基本环节。 图源：<a href="https://arxiv.org/abs/2503.03751">GEN3C</a>，选自分享材料。</figcaption></figure>
+<p>显式缓存让约束变得可检查，也把几何估计的误差带入生成过程。我认为需要重点关注四个问题：</p>
+<ul>
+<li><strong>深度误差：</strong>尺度不一致、边缘噪声和遮挡处的错误会影响重投影条件。</li>
+<li><strong>缓存规模：</strong>随时间保存更多帧或点云，会增加存储、检索和渲染成本，需要压缩、筛选或更新机制。</li>
+<li><strong>错误修正：</strong>如果持续把有误的缓存当成可靠条件，后续生成可能继承这些错误。</li>
+<li><strong>动态前景：</strong>静态缓存假设难以直接描述运动物体，需要时间信息或动态更新。</li>
+</ul>
+<p>这些是设计上的难点，并不意味着显式几何方法普遍无法处理动态场景或长序列。例如 GEN3C 已展示动态视频结果。更具体的问题是：在给定缓存表示和更新策略下，哪些变化能被维护，哪些错误能够被纠正。</p>
+</section>
+<section id="geometry-learning">
+<h2>Stage 2：让内部表征学习几何</h2>
+<p>另一种思路是把几何约束放进训练过程，让生成模型的内部特征本身更适合描述三维结构。DUSt3R、VGGT 等前馈三维重建模型提供了一个入口：它们可以从图像提取用于几何预测的特征，也可以通过点图、深度和相机等任务提供监督信号。</p>
+<p>这一类方法并不排斥显式几何输出。这里关注的是<strong>几何信息如何进入生成模型，以及推理时需要保留哪些模块</strong>。</p>
+<h3 id="geometry-forcing">Geometry Forcing：用几何教师约束中间特征</h3>
+<p><a href="https://arxiv.org/abs/2507.07982">Geometry Forcing</a> 把预训练 VGGT 当作几何教师。真实视频经过教师得到目标特征，带噪视频经过扩散模型得到中间特征，训练时再约束两者之间的关系。它关注的是表征空间，而不是额外维护一个不断增长的外部场景缓存。</p>
+<figure class="post-figure figure-compact"><a aria-label="查看完整图片：Geometry Forcing 用几何教师的特征监督扩散模型的中间表征。" class="image-link" href="/images/blog/spatial-consistency/geometry-forcing.webp"><img alt="Geometry Forcing 用几何教师的特征监督扩散模型的中间表征。" height="536" loading="lazy" src="/images/blog/spatial-consistency/geometry-forcing.webp" width="577"/></a><figcaption>Geometry Forcing 用几何教师的特征监督扩散模型的中间表征。 图源：<a href="https://arxiv.org/abs/2507.07982">Geometry Forcing</a>，选自分享材料。</figcaption></figure>
+<p>论文采用 Angular Alignment 和 Scale Alignment 两类目标。前者通过方向上的一致性约束特征，后者补充与尺度有关的信息。这里的“尺度”首先指几何特征中的尺度相关信息，不能直接等同于模型已获得任意场景的真实米制尺度。教师用于提供训练监督，视频生成时不必再次运行教师来产生每一步的条件。</p>
+<h3 id="jog3r">JOG3R：让视频生成与三维估计共享特征</h3>
+<p><a href="https://arxiv.org/abs/2501.01409">JOG3R</a> 联合训练视频生成与三维点图估计。其出发点很直接：如果中间特征还要支持几何任务，模型就有动力保留仅靠图像生成目标不容易学到的空间信息。论文基于 OpenSora 的视频生成特征，引入几何解码与相应的训练约束。</p>
+<figure class="post-figure"><a aria-label="查看完整图片：JOG3R 联合视频生成与三维点图估计。" class="image-link" href="/images/blog/spatial-consistency/jog3r.webp"><img alt="JOG3R 联合视频生成与三维点图估计。" height="517" loading="lazy" src="/images/blog/spatial-consistency/jog3r.webp" width="1800"/></a><figcaption>JOG3R 联合视频生成与三维点图估计。 图源：<a href="https://arxiv.org/abs/2501.01409">JOG3R</a>，选自分享材料。</figcaption></figure>
+<p>我把它理解为多任务结构中的几何约束：一部分特征同时服务于外观生成和三维估计。关键问题是如何选择接入位置、协调损失，并保证几何监督真正改善生成的视频，而不只是让附加预测头更好地拟合训练数据。</p>
+<h3 id="fantasyworld">FantasyWorld：让生成分支与几何分支持续交互</h3>
+<p><a href="https://arxiv.org/abs/2509.21657">FantasyWorld</a> 在视频生成主干之外引入几何分支，通过跨分支的信息交互联合预测视频与三维属性。视频先验为几何预测提供外观与场景信息，几何特征又反过来约束生成过程。</p>
+<figure class="post-figure"><a aria-label="查看完整图片：FantasyWorld 的整体框架及生成、几何双分支结构。" class="image-link" href="/images/blog/spatial-consistency/fantasyworld.webp"><img alt="FantasyWorld 的整体框架及生成、几何双分支结构。" height="313" loading="lazy" src="/images/blog/spatial-consistency/fantasyworld.webp" width="1216"/></a><figcaption>FantasyWorld 的整体框架及生成、几何双分支结构。 图源：<a href="https://arxiv.org/abs/2509.21657">FantasyWorld</a>，选自分享材料。</figcaption></figure>
+<p>一个有意思的设计是 Preconditioning Blocks。论文中的 Wan2.1 配置复用前 16 个冻结层，先让潜在特征经过初步处理，再交给后续几何交互模块。这样做的目的是避免几何分支从一开始就直接面对缺乏稳定结构的高噪声输入。这个层数来自该配置下的设计，不能作为所有扩散模型都适用的分界。</p>
+<p>后续的 IRG Block 使用非对称双分支：视频分支保留生成先验，几何分支处理几何特征，两者通过适配器和交叉注意力交换信息，最后由对应的解码头输出视频、相机、深度和点图。</p>
+<figure class="post-figure figure-compact"><a aria-label="查看完整图片：IRG Block 在视频分支与几何分支之间交换信息。" class="image-link" href="/images/blog/spatial-consistency/irg-block.webp"><img alt="IRG Block 在视频分支与几何分支之间交换信息。" height="394" loading="lazy" src="/images/blog/spatial-consistency/irg-block.webp" width="421"/></a><figcaption>IRG Block 在视频分支与几何分支之间交换信息。 图源：<a href="https://arxiv.org/abs/2509.21657">FantasyWorld</a>，选自分享材料。</figcaption></figure>
+<h3>三种几何学习方式的区别</h3>
+<div aria-label="几何学习方法对比" class="table-scroll" role="region" tabindex="0">
+<table class="comparison-table">
+<thead><tr><th scope="col">方法</th><th scope="col">几何约束放在哪里</th><th scope="col">理解重点</th></tr></thead>
+<tbody>
+<tr><th scope="row">Geometry Forcing</th><td>教师特征与扩散中间层之间的对齐损失</td><td>让生成表征接近几何表征</td></tr>
+<tr><th scope="row">JOG3R</th><td>视频生成特征与三维估计任务的联合训练</td><td>共享特征需要兼顾生成和几何</td></tr>
+<tr><th scope="row">FantasyWorld</th><td>视频与几何分支之间的持续信息交互</td><td>两种表征在生成过程中相互约束</td></tr>
+</tbody>
+</table>
+</div>
+<p>这张表描述的是方法机制，不是统一条件下的性能排名。论文的基础模型、训练数据和评测协议不同，不能只凭方法分类判断哪一种普遍更好。</p>
+</section>
+<section id="geometry-state">
+<h2>VGGT-World：预测几何状态的演化</h2>
+<p>如果后续任务真正需要的是未来的几何状态，是否还必须先生成 RGB，再从 RGB 中恢复几何？<a href="https://arxiv.org/abs/2603.12655">VGGT-World</a> 选择直接在冻结的 VGGT 特征空间中进行未来预测。</p>
+<figure class="post-figure"><a aria-label="查看完整图片：视频生成后重建与直接预测几何特征的路线对比。" class="image-link" href="/images/blog/spatial-consistency/vggt-world.webp"><img alt="视频生成后重建与直接预测几何特征的路线对比。" height="670" loading="lazy" src="/images/blog/spatial-consistency/vggt-world.webp" width="1041"/></a><figcaption>视频生成后重建与直接预测几何特征的路线对比。 图源：<a href="https://arxiv.org/abs/2603.12655">VGGT-World</a>，选自分享材料。</figcaption></figure>
+<p>它用几何基础模型的特征作为世界状态，训练时序 flow 模型自回归地预测后续特征，再交给冻结的 VGGT 解码器和三维任务头，得到深度、点图和相机相关输出。这里的主要目标是<strong>几何预测</strong>，并不是把预测特征解码成 RGB 视频。</p>
+<p>这个选择改变了模型需要花费能力的地方。像素预测需要同时处理纹理、光照和几何，而几何特征预测把重点放在空间结构的演化上。不过，特征空间也有自身困难：高维表示可能使训练不稳定，自回归预测则会把前一步的误差带入后续步骤。论文针对这些问题采用干净目标预测参数化和分阶段的训练课程。</p>
+<p>对我来说，这条路线提出了一个值得继续追问的问题：用于推演未来的状态表征，应该保留哪些可操作、可验证的信息？对于几何预测任务，预训练几何特征有明确的优势；对更广泛的交互和控制任务，还需要检查动作、物体状态与长期记忆是否被充分表达。</p>
+</section>
+<section id="revisit">
+<h2>长程回访与尚未解决的问题</h2>
+<p>把几何放进缓存或特征，并不会自动解决长期记忆。相邻视角可以局部一致，但当轨迹持续延长，模型仍可能忘记已经离开视野的结构。Geometry Forcing 等工作已经引入回访评估；我更关心的是在更长轨迹、更大视角变化和动态场景下，这种能力能否稳定维持。</p>
+<p>阅读和测试这类模型时，我会分别检查：</p>
+<ol>
+<li><strong>新视角对应：</strong>已有结构投影到另一个视角后，物体位置、深度与遮挡关系是否一致。</li>
+<li><strong>离开后回访：</strong>在场景未发生真实变化的前提下，回到旧视角时能否恢复原有布局。</li>
+<li><strong>动态状态维护：</strong>物体移动后，旧位置是否被合理更新，回访时能否保持新的状态。</li>
+<li><strong>长期误差与资源成本：</strong>随着生成长度增加，几何误差、缓存大小和推理成本分别如何增长。</li>
+</ol>
+<p>把生成视频送进 VGGT 或其他重建模型，是一种有用的诊断方式，但重建失败不能单独证明视频缺乏三维一致性。重建器的训练分布、分辨率、相机基线和运动情况都会影响结果。更可靠的做法，是在可控条件下结合重投影、相机与深度误差、回访测试和定性观察。</p>
+<p>我想继续探索的是：如何让几何表征同时承担当前场景理解、未来状态预测与可更新的长期记忆，并使这些能力最终服务于机器人的实际交互。</p>
+</section>
+<section class="post-references" id="references">
+<h2>参考论文与项目</h2>
+<p>下列链接指向原始论文或作者项目。文中方法图来自本次分享材料中引用的对应工作，版权归原作者，图下注明出处。</p>
+<ol>
+<li><a href="https://arxiv.org/abs/2404.02101">CameraCtrl: Enabling Camera Control for Video Diffusion Models</a></li>
+<li><a href="https://arxiv.org/abs/2503.03751">GEN3C: 3D-Informed World-Consistent Video Generation with Precise Camera Control</a></li>
+<li><a href="https://arxiv.org/abs/2503.05638">TrajectoryCrafter: Redirecting Camera Trajectory for Monocular Videos via Diffusion Models</a></li>
+<li><a href="https://github.com/facebookresearch/vggt">VGGT: Visual Geometry Grounded Transformer</a> · <a href="https://github.com/naver/dust3r">DUSt3R</a></li>
+<li><a href="https://arxiv.org/abs/2507.07982">Geometry Forcing: Marrying Video Diffusion and 3D Representation for Consistent World Modeling</a></li>
+<li><a href="https://arxiv.org/abs/2501.01409">JOG3R: Towards 3D-Consistent Video Generators</a></li>
+<li><a href="https://arxiv.org/abs/2509.21657">FantasyWorld: Geometry-Consistent World Modeling via Unified Video and 3D Prediction</a></li>
+<li><a href="https://arxiv.org/abs/2603.12655">VGGT-World: Transforming VGGT into an Autoregressive Geometry World Model</a></li>
+</ol>
+</section>
+<p class="post-end"><a href="/blog/">返回博客</a> · <a href="#content">回到文章顶部</a></p>
+</article>
+</main>
+<footer class="site-footer">
+<p><a href="mailto:tianyinchen@hust.edu.cn">Email</a> · <a href="https://scholar.google.com/citations?user=RV8ypUoAAAAJ&amp;hl=en">Google Scholar</a> · <a href="https://github.com/TianYinchen56">GitHub</a></p>
+<p>Adapted from <a href="https://jonbarron.info/">Jon Barron</a>'s academic website. <a href="https://github.com/TianYinchen56/TianYinchen56.github.io">Source</a>.</p>
+</footer>
+</div>
+</body>
+</html>

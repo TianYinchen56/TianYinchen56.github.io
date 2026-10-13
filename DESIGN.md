@@ -9,6 +9,7 @@ Preserve the Jon Barron academic template selected under the user's explicit del
 - DESIGN_VARIANCE: 3; MOTION_INTENSITY: 1; VISUAL_DENSITY: 4.
 - The owner's latest instruction supersedes circular presentation on the website: show the complete original photograph, without a mask or crop. This does not alter the separate Scholar avatar.
 - Research figures and certificates retain their full aspect ratios and link directly to larger images. Competition entries use the original certificates as the source for titles, levels, and years.
-- No invented content, placeholder links, tracking, or marketing components.
+- No invented content, placeholder links, or marketing components. The owner-requested homepage visitor map is the sole external visitor-counting component.
+- Long Chinese articles use an 800px reading column, clear section headings, a linked contents list, and complete attributed figures. Competition archives group certificates by year.
 
 The user's direct reuse request settles template selection and construction. This is an adaptation of the established template, not an open-ended visual redesign.
