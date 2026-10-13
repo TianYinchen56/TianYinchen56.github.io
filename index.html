@@ -1,93 +1,77 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <!-- Adapted from Jon Barron's academic website. See TEMPLATE_CREDIT.md. -->
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Yinchen Tian | 3D Vision &amp; Embodied AI</title>
-    <meta name="author" content="Yinchen Tian">
-    <meta name="description" content="Yinchen Tian (田胤辰), Huazhong University of Science and Technology. Research in 3D vision, multi-view perception, robot learning, and world models.">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Yinchen Tian | 3D Vision & Embodied AI">
-    <meta property="og:description" content="Research, publications, and projects in 3D vision and embodied AI.">
-    <meta property="og:url" content="https://tianyinchen56.github.io/">
-    <meta property="og:image" content="https://tianyinchen56.github.io/images/mv-actor-robots.webp">
-    <meta name="theme-color" content="#ffffff">
-    <link rel="canonical" href="https://tianyinchen56.github.io/">
-    <link rel="icon" href="images/favicon.png" type="image/png">
-    <link rel="stylesheet" href="stylesheet.css">
-    <link rel="stylesheet" href="site.css">
-    <script type="application/ld+json">
-      {"@context":"https://schema.org","@type":"Person","name":"Yinchen Tian","alternateName":["田胤辰","Tian Yinchen"],"url":"https://tianyinchen56.github.io/","affiliation":{"@type":"CollegeOrUniversity","name":"Huazhong University of Science and Technology"},"sameAs":["https://scholar.google.com/citations?user=RV8ypUoAAAAJ","https://github.com/TianYinchen56"],"knowsAbout":["3D Computer Vision","Embodied AI","Robot Learning","World Models"]}
-    </script>
-  </head>
-  <body>
-    <a class="skip-link" href="#content">Skip to content</a>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Yinchen Tian | 3D Vision &amp; Embodied AI</title>
+  <meta name="author" content="Yinchen Tian">
+  <meta name="description" content="Yinchen Tian (田胤辰), Huazhong University of Science and Technology. Research, competitions, and notes on 3D vision and embodied AI.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Yinchen Tian | 3D Vision &amp; Embodied AI">
+  <meta property="og:description" content="Yinchen Tian (田胤辰), Huazhong University of Science and Technology. Research, competitions, and notes on 3D vision and embodied AI.">
+  <meta property="og:url" content="https://tianyinchen56.github.io/">
+  <meta property="og:image" content="https://tianyinchen56.github.io/images/yinchen-tian-campus.webp">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="canonical" href="https://tianyinchen56.github.io/">
+  <link rel="icon" href="/images/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/stylesheet.css">
+  <link rel="stylesheet" href="/site.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Yinchen Tian","alternateName":["田胤辰","Tian Yinchen"],"url":"https://tianyinchen56.github.io/","affiliation":{"@type":"CollegeOrUniversity","name":"Huazhong University of Science and Technology"},"sameAs":["https://scholar.google.com/citations?user=RV8ypUoAAAAJ","https://github.com/TianYinchen56"],"knowsAbout":["3D Computer Vision","Embodied AI","Robot Learning","World Models"]}</script>
+</head>
+<body class="page-home">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="site-shell">
+    <header class="site-header">
+      <a class="wordmark" href="/">Yinchen Tian <span lang="zh-Hans">田胤辰</span></a>
+      <nav class="site-nav" aria-label="Main navigation"><a href="/" aria-current="page">Home</a><a href="/research/">Research</a><a href="/competitions/">Competitions</a><a href="/blog/">Blog</a></nav>
+    </header>
     <main id="content">
-      <table class="page-table" role="presentation"><tbody><tr><td>
-        <table class="intro-table" role="presentation"><tbody><tr class="intro-row">
-          <td class="bio">
-            <h1 class="name">Yinchen Tian <span lang="zh-Hans">田胤辰</span></h1>
-            <p>My research at <a href="https://english.hust.edu.cn/">Huazhong University of Science and Technology</a> focuses on <strong>3D vision and embodied AI</strong>.</p>
-            <p>I am interested in learning visual representations that connect scene geometry with robot actions. My work explores multi-view perception, bimanual manipulation, and world models.</p>
-            <nav class="contact-links" aria-label="Contact and academic profiles">
-              <a href="mailto:tianyinchen@hust.edu.cn">Email</a><span aria-hidden="true">/</span>
-              <a href="https://scholar.google.com/citations?user=RV8ypUoAAAAJ&amp;hl=en">Google Scholar</a><span aria-hidden="true">/</span>
-              <a href="https://github.com/TianYinchen56">GitHub</a>
-            </nav>
-          </td>
-          <td class="portrait-cell">
-            <img class="portrait" src="images/yinchen-tian.jpg" width="800" height="800" alt="Yinchen Tian outdoors on campus, with the surrounding scenery preserved" fetchpriority="high">
-          </td>
-        </tr></tbody></table>
 
-        <section class="section" aria-labelledby="research-heading">
-          <h2 id="research-heading">Research</h2>
-          <p>I study how multi-view semantics and 3D geometry can improve visual reasoning and robot manipulation. I am also interested in depth estimation, neural scene representations, and learning predictive world models for embodied agents.</p>
-          <table class="publication-table" role="presentation"><tbody>
-            <tr class="publication-row">
-              <td class="paper-image-cell">
-                <a href="https://arxiv.org/abs/2606.10899" aria-label="Read MV-Actor on arXiv">
-                  <img src="images/mv-actor-robots.webp" width="1480" height="616" alt="MV-Actor real-robot experiments: a bimanual platform performing cooperative manipulation tasks">
-                </a>
-                <a class="figure-link" href="images/mv-actor-teaser.webp">View paper figure</a>
-              </td>
-              <td class="paper-details">
-                <h3 class="papertitle"><a href="https://arxiv.org/abs/2606.10899">MV-Actor: Aligning Multi-View Semantics and Spatial Awareness for Bimanual Manipulation</a></h3>
-                <p class="authors"><strong>Yinchen Tian</strong>, Huan Li, Muyao Peng, Xi Wang, Yan Wang, You Yang</p>
-                <p class="venue"><em>arXiv preprint</em>, 2026</p>
-                <p class="paper-links"><a href="https://arxiv.org/abs/2606.10899">Paper</a><span aria-hidden="true">/</span><a href="https://arxiv.org/pdf/2606.10899">PDF</a><span aria-hidden="true">/</span><a href="https://github.com/TianYinchen56/MV-Actor">Code</a><span aria-hidden="true">/</span><a href="data/mv-actor.bib" download>BibTeX</a></p>
-                <p class="paper-summary">A unified semantic-spatial representation for bimanual manipulation, with cross-view interaction and metric depth repair. MV-Actor achieves 87.8% average success on PerAct2 and is evaluated on a real bimanual robot.</p>
-              </td>
-            </tr>
-          </tbody></table>
+      <section class="intro" aria-labelledby="intro-heading">
+        <div class="bio">
+          <h1 id="intro-heading">Yinchen Tian <span lang="zh-Hans">田胤辰</span></h1>
+          <p>My research at <a href="https://english.hust.edu.cn/">Huazhong University of Science and Technology</a> focuses on <strong>3D vision and embodied AI</strong>.</p>
+          <p>I am interested in learning visual representations that connect scene geometry with robot actions. My work explores multi-view perception, bimanual manipulation, and world models.</p>
+          <nav class="contact-links" aria-label="Contact and academic profiles">
+            <a href="mailto:tianyinchen@hust.edu.cn">Email</a>
+            <a href="https://scholar.google.com/citations?user=RV8ypUoAAAAJ&amp;hl=en">Google Scholar</a>
+            <a href="https://github.com/TianYinchen56">GitHub</a>
+          </nav>
+        </div>
+        <figure class="portrait"><a class="image-link" href="/images/yinchen-tian-campus.webp" aria-label="Open full image: Yinchen Tian outdoors on campus, with the full surrounding scenery"><img src="/images/yinchen-tian-campus.webp" width="1800" height="1014" alt="Yinchen Tian outdoors on campus, with the full surrounding scenery" fetchpriority="high"></a></figure>
+      </section>
+      <section class="home-research" aria-labelledby="research-heading">
+        <div class="section-heading"><h2 id="research-heading">Research</h2><a href="/research/">All research</a></div>
+        <article>
+          <h3><a href="/research/#mv-actor">MV-Actor: Aligning Multi-View Semantics and Spatial Awareness for Bimanual Manipulation</a></h3>
+          <p class="meta"><strong>Yinchen Tian</strong>, Huan Li, Muyao Peng, Xi Wang, Yan Wang, You Yang · arXiv, 2026</p>
+          <p>A unified semantic-spatial representation that connects multi-view visual understanding with bimanual robot actions.</p>
+          <figure class="research-figure">
+            <a class="image-link" href="/images/mv-actor-robots.webp" aria-label="Open full image: MV-Actor real-robot setup and bimanual manipulation tasks"><img src="/images/mv-actor-robots.webp" width="1480" height="616" alt="MV-Actor real-robot setup and bimanual manipulation tasks" loading="lazy"></a>
+            <figcaption>MV-Actor on a real bimanual robot. <a href="/research/#mv-actor">Explore the paper and figures</a>.</figcaption>
+          </figure>
+        </article>
+      </section>
+      <div class="home-secondary">
+        <section aria-labelledby="competitions-heading">
+          <h2 id="competitions-heading">Competitions</h2>
+          <p>Projects and awards in robotics, intelligent systems, and engineering practice.</p>
+          <p class="meta">Selected awards from 2025, with original certificates.</p>
+          <a href="/competitions/">View competitions and certificates</a>
         </section>
-
-        <section class="section projects" aria-labelledby="projects-heading">
-          <h2 id="projects-heading">Earlier research projects</h2>
-          <article>
-            <h3>Depth alignment for few-shot NeRF</h3>
-            <p>Explored mixture-of-experts depth alignment to address nonlinear scale drift across monocular depth estimates, together with uncertainty and depth-continuity constraints. This project is referred to as ADDNeRF in my research work.</p>
-          </article>
-          <article>
-            <h3>Efficient LiDAR and Gaussian scene representations</h3>
-            <p>Worked on geometry-preserving point-cloud downsampling and frequency-guided Gaussian primitive scheduling for efficient 3D reconstruction, in the Lidar2dgs project.</p>
-          </article>
+        <section aria-labelledby="blog-heading">
+          <h2 id="blog-heading">Blog</h2>
+          <p>A space for notes on 3D vision, robot learning, and research practice.</p>
+          <p class="meta">The first post is still to come.</p>
+          <a href="/blog/">Visit the blog</a>
         </section>
-
-        <section class="section honors" aria-labelledby="honors-heading">
-          <h2 id="honors-heading">Selected honors</h2>
-          <ul>
-            <li><span class="year">2025</span><span><strong>National First Prize</strong>, China University Intelligent Robot Creative Competition</span></li>
-            <li><span class="year">2025</span><span><strong>National Second Prize</strong>, China Robot and Artificial Intelligence Competition</span></li>
-            <li><span class="year">2025</span><span><strong>Provincial Second Prize</strong>, Hubei College Students Engineering Training Comprehensive Ability Competition</span></li>
-          </ul>
-        </section>
-
-        <footer>
-          <p>Website template adapted from <a href="https://jonbarron.info/">Jon Barron</a>. <a href="https://github.com/TianYinchen56/TianYinchen56.github.io">Source</a>.</p>
-        </footer>
-      </td></tr></tbody></table>
+      </div>
     </main>
-  </body>
+    <footer class="site-footer">
+      <p><a href="mailto:tianyinchen@hust.edu.cn">Email</a> · <a href="https://scholar.google.com/citations?user=RV8ypUoAAAAJ&amp;hl=en">Google Scholar</a> · <a href="https://github.com/TianYinchen56">GitHub</a></p>
+      <p>Adapted from <a href="https://jonbarron.info/">Jon Barron</a>'s academic website. <a href="https://github.com/TianYinchen56/TianYinchen56.github.io">Source</a>.</p>
+    </footer>
+  </div>
+</body>
 </html>

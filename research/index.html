@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!-- Adapted from Jon Barron's academic website. See TEMPLATE_CREDIT.md. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Research | Yinchen Tian</title>
+  <meta name="author" content="Yinchen Tian">
+  <meta name="description" content="Publications and research projects by Yinchen Tian in 3D vision, multi-view perception, and robot learning.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Research | Yinchen Tian">
+  <meta property="og:description" content="Publications and research projects by Yinchen Tian in 3D vision, multi-view perception, and robot learning.">
+  <meta property="og:url" content="https://tianyinchen56.github.io/research/">
+  <meta property="og:image" content="https://tianyinchen56.github.io/images/yinchen-tian-campus.webp">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="canonical" href="https://tianyinchen56.github.io/research/">
+  <link rel="icon" href="/images/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/stylesheet.css">
+  <link rel="stylesheet" href="/site.css">
+
+</head>
+<body class="page-research">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="site-shell">
+    <header class="site-header">
+      <a class="wordmark" href="/">Yinchen Tian <span lang="zh-Hans">田胤辰</span></a>
+      <nav class="site-nav" aria-label="Main navigation"><a href="/">Home</a><a href="/research/" aria-current="page">Research</a><a href="/competitions/">Competitions</a><a href="/blog/">Blog</a></nav>
+    </header>
+    <main id="content">
+
+      <div class="page-intro">
+        <h1>Research <span lang="zh-Hans">科研</span></h1>
+        <p>I study how multi-view semantics and 3D geometry can improve visual reasoning and robot manipulation. My interests also include depth estimation, neural scene representations, and predictive world models for embodied agents.</p>
+      </div>
+      <article class="research-paper" id="mv-actor" aria-labelledby="mv-actor-heading">
+        <h2 id="mv-actor-heading"><a href="https://arxiv.org/abs/2606.10899">MV-Actor: Aligning Multi-View Semantics and Spatial Awareness for Bimanual Manipulation</a></h2>
+        <p class="authors"><strong>Yinchen Tian</strong>, Huan Li, Muyao Peng, Xi Wang, Yan Wang, You Yang</p>
+        <p class="meta"><em>arXiv preprint</em>, 2026</p>
+        <nav class="paper-links" aria-label="MV-Actor resources"><a href="https://arxiv.org/abs/2606.10899">Paper</a><a href="https://arxiv.org/pdf/2606.10899">PDF</a><a href="https://github.com/TianYinchen56/MV-Actor">Code</a><a href="/data/mv-actor.bib" download>BibTeX</a></nav>
+        <p class="prose">A unified semantic-spatial representation for bimanual manipulation, with cross-view interaction and metric depth repair. MV-Actor achieves 87.8% average success on PerAct2 and is evaluated on a real bimanual robot.</p>
+        <figure class="research-figure">
+          <a class="image-link" href="/images/mv-actor-robots.webp" aria-label="Open full image: MV-Actor real-robot setup and bimanual manipulation tasks"><img src="/images/mv-actor-robots.webp" width="1480" height="616" alt="MV-Actor real-robot setup and bimanual manipulation tasks" fetchpriority="high"></a>
+          <figcaption>Real-robot setup and example bimanual manipulation tasks from MV-Actor.</figcaption>
+        </figure>
+        <figure class="research-figure teaser-figure">
+          <a class="image-link" href="/images/mv-actor-teaser.webp" aria-label="Open full image: MV-Actor overview, showing simulated and real-world bimanual manipulation"><img src="/images/mv-actor-teaser.webp" width="924" height="888" alt="MV-Actor overview, showing simulated and real-world bimanual manipulation" loading="lazy"></a>
+          <figcaption>MV-Actor overview. Select either figure to open the complete image.</figcaption>
+        </figure>
+      </article>
+      <section class="earlier-projects" aria-labelledby="earlier-heading">
+        <h2 id="earlier-heading">Earlier research</h2>
+        <article>
+          <h3>Depth alignment for few-shot NeRF</h3>
+          <p class="prose">Explored mixture-of-experts depth alignment to address nonlinear scale drift across monocular depth estimates, together with uncertainty and depth-continuity constraints. This project is referred to as ADDNeRF in my research work.</p>
+        </article>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <p><a href="mailto:tianyinchen@hust.edu.cn">Email</a> · <a href="https://scholar.google.com/citations?user=RV8ypUoAAAAJ&amp;hl=en">Google Scholar</a> · <a href="https://github.com/TianYinchen56">GitHub</a></p>
+      <p>Adapted from <a href="https://jonbarron.info/">Jon Barron</a>'s academic website. <a href="https://github.com/TianYinchen56/TianYinchen56.github.io">Source</a>.</p>
+    </footer>
+  </div>
+</body>
+</html>
